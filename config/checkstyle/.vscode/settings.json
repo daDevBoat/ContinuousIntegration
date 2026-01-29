@@ -1,0 +1,14 @@
+{
+  "editor.formatOnSave": true,
+
+  "[java]": {
+    "editor.defaultFormatter": "ilkka.vscode-google-java-format",
+    "editor.formatOnSave": true
+  },
+
+  "java.checkstyle.configuration": "${workspaceFolder}/config/checkstyle/checkstyle.xml",
+
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "ilkka.vscode-google-java-format",
+    "redhat.java",
+    "shengchen.vscode-checkstyle"
+  ]
+}
