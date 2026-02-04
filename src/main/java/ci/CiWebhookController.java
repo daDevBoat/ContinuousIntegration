@@ -10,9 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class CiWebhookController {
 
   @PostMapping("/webhook/github")
-  public ResponseEntity<String> githubWebhook(
+  public ResponseEntity<?> githubWebhook(
       @RequestHeader(value = "X-GitHub-Event", required = true) String event,
       @RequestBody(required = false) byte[] body) {
+
+    /* First checking for correct event type */
+    if (!ci.Validation.validatePushEvent(event)) {
+      return ResponseEntity.badRequest().build();
+    }
 
     return ResponseEntity.ok("Webhook received");
   }
