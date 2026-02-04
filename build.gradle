@@ -83,6 +83,28 @@ tasks.register("formatCheck") {
     dependsOn("spotlessCheck")
 }
 
+tasks.register("ci") {
+    group = "verification"
+    description = "Format, style-check, build, and test."
+
+    // Apply Spotless
+    dependsOn("spotlessApply")
+
+    // Verify formating and stylecheck
+    dependsOn("check")
+
+    // run all tests
+    dependsOn("test")
+
+    // ensure the build works
+    dependsOn("build")
+
+}
+// Defines the order if several tasks are called 
+tasks.named("spotlessCheck").configure { mustRunAfter("spotlessApply") }
+tasks.named("check").configure { mustRunAfter("spotlessApply") }
+tasks.named("build").configure { mustRunAfter("check") }
+
 check.dependsOn("spotlessCheck")
 check.dependsOn("checkstyleMain")
 check.dependsOn("checkstyleTest")
