@@ -2,6 +2,8 @@ package ci;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,8 @@ public class CiWebhookController {
 
   @Value("${ci.repoID:ContinuousIntegration}")
   String repoID;
+
+  private CompilationService compilationService = new CompilationService();
 
   /**
    * Serves the home page of the CI server.
@@ -91,6 +95,42 @@ public class CiWebhookController {
     RepoSetup.createDir(repoParentDir);
     RepoSetup.cloneRepo(repoParentDir, repoID, repoSsh);
     RepoSetup.updateRepo(repoParentDir, repoID, sha);
+
+    File dir = new File(repoParentDir, repoID);
+
+    /* Check if the directory exists */
+    if (!dir.isDirectory()) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Repo dir was not found '" + dir.getAbsolutePath() + "'.");
+    }
+    try {
+      /* Starts the compilation */
+      System.out.println("[CI] Starting Compilation...");
+      CompilationService.CompilationResult compilationResult = compilationService.compile(dir);
+
+      if (!compilationResult.isSuccess()) {
+        System.out.println("[CI] Compilation FAILED");
+        System.out.println("[CI] Exit code: " + compilationResult.getExitCode());
+        System.out.println("[CI] Output:\n" + compilationResult.getOutput());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(
+                "Compilation failed (exit "
+                    + compilationResult.getExitCode()
+                    + ")\n"
+                    + compilationResult.getOutput());
+      }
+      System.out.println("[CI] Compilation SUCCEEDED");
+    } catch (IOException e) {
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Failed to parse webhook or execute commands: " + e.getMessage());
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Command execution was interrupted: " + e.getMessage());
+    }
 
     return ResponseEntity.ok("Webhook received");
   }
