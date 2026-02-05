@@ -1,5 +1,8 @@
 package ci;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CiWebhookController {
+
+  @Value("${git.repoName:daDevBoat/ContinuousIntegration}")
+  private String repoName;
 
   /**
    * Serves the home page of the CI server.
@@ -25,8 +31,24 @@ public class CiWebhookController {
       @RequestHeader(value = "X-GitHub-Event", required = true) String event,
       @RequestBody(required = false) byte[] body) {
 
-    /* First checking for correct event type */
+    /* Convert the body[] into a json object */
+    ObjectMapper mapper = new ObjectMapper();
+    JsonNode payload = null;
+    try {
+      payload = mapper.readTree(body);
+    } catch (Exception e) {
+      // Add other error handling here with website
+      System.out.println(e);
+    }
+
+    /* Checking for correct event type */
     if (!ci.Validation.validatePushEvent(event)) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    /* Checking for correct repo */
+
+    if (!ci.Validation.validateRepoName(payload, repoName)) {
       return ResponseEntity.badRequest().build();
     }
 
