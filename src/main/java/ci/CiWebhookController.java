@@ -43,13 +43,15 @@ public class CiWebhookController {
 
     /* Checking for correct event type */
     if (!ci.Validation.validatePushEvent(event)) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.badRequest()
+          .body("The github event is not push, but is required to be so.");
     }
 
     /* Checking for correct repo */
 
     if (!ci.Validation.validateRepoName(payload, repoName)) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.badRequest()
+          .body("The repo name is not: " + repoName + ", while it is required to be so");
     }
 
     return ResponseEntity.ok("Webhook received");
