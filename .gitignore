@@ -28,3 +28,5 @@ replay_pid*
 ./gradlew
 build/
 
+# Local config file
+src/main/resources/application-local.properties
