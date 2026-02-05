@@ -17,7 +17,7 @@ public class CiWebhookControllerTest {
   /**
    * Contract: Given a running application with CiWebhookController configured, when a GET request
    * is made to the root path "/", then the response status should be 200 OK and the response body
-   * should contain the message "Server is running successfully".
+   * should contain the exact message "Server is running successfully".
    */
   @Test
   public void testHomePage() throws Exception {
