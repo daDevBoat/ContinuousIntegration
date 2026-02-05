@@ -1,6 +1,8 @@
 package ci;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -94,5 +96,60 @@ public class ValidationTest {
     ObjectNode repository = (ObjectNode) payload.get("repository");
     repository.put("full_name", "daDevBoat/test");
     assertFalse(ci.Validation.validateRepoName(payload, repoName));
+  }
+
+  @Test
+  public void validateSignatureTest() {
+    /*
+     * Contract: A signature is valid if it is the same as computing
+     *  the signature of a message using the sharedKey with the same algorithm,
+     *  in this case SHA256.
+     */
+    String body = "this is the text that should be hashed";
+    String sharedKey = "test1";
+    String signature = "sha256=8235f5dde6be4a508848a58c377aaec2e954905cf9d40f1582d3e1a0f44e6771";
+
+    assertDoesNotThrow(
+        () -> {
+          boolean validSignature =
+              ci.Validation.validateSignature(sharedKey, body.getBytes("UTF-8"), signature);
+          assertTrue(validSignature);
+        });
+  }
+
+  @Test
+  public void validateSignatureWrongSignatureTest() {
+    /*
+     * Contract: A signature is valid if it is the same as computing the signature of a message
+     *  using the sharedKey with the same algorithm, in this case SHA256. In this case we replace
+     *  in the given signature to yield a faulty signature and make sure the validation function
+     *  returns false.
+     */
+    String body = "this is the text that should be hashed";
+    String sharedKey = "test1";
+    String signature =
+        "sha256=8235f5dde6be4a508848a58c377aaec2e954905cf9d40f1582d3e1a0f44e6771".replace("3", "1");
+
+    assertDoesNotThrow(
+        () -> {
+          boolean validSignature =
+              ci.Validation.validateSignature(sharedKey, body.getBytes("UTF-8"), signature);
+          assertFalse(validSignature);
+        });
+  }
+
+  @Test
+  public void validateSignatureBadBodyInputTest() {
+    /*
+     * Contract: The validation function uses another function which requires non-null body
+     *  (and non-empty).
+     */
+    byte[] body = null;
+    String sharedKey = "test1";
+    String signature = "sha256=8235f5dde6be4a508848a58c377aaec2e954905cf9d40f1582d3e1a0f44e6771";
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> ci.Validation.validateSignature(sharedKey, body, signature));
   }
 }
