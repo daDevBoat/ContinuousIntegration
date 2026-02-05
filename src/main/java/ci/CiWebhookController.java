@@ -20,6 +20,15 @@ public class CiWebhookController {
   @Value("${git.repoName:daDevBoat/ContinuousIntegration}")
   private String repoName;
 
+  @Value("${ci.repoParentDir:not a file}")
+  private String repoParentDir;
+
+  @Value("${ci.repoSsh:git-ssh}")
+  String repoSsh;
+
+  @Value("${ci.repoID:ContinuousIntegration}")
+  String repoID;
+
   /**
    * Serves the home page of the CI server.
    *
@@ -67,11 +76,21 @@ public class CiWebhookController {
     }
 
     /* Checking for correct repo */
-
     if (!ci.Validation.validateRepoName(payload, repoName)) {
       return ResponseEntity.badRequest()
           .body("The repo name is not: " + repoName + ", while it is required to be so");
     }
+
+    /* Checking if sha exists */
+    String sha = payload.path("after").asText("");
+    if (sha.isBlank()) {
+      return ResponseEntity.badRequest().body("Missing commit sha");
+    }
+
+    /* Building the repo if it doesnt exist yet, and pulling newest changes */
+    RepoSetup.createDir(repoParentDir);
+    RepoSetup.cloneRepo(repoParentDir, repoID, repoSsh);
+    RepoSetup.updateRepo(repoParentDir, repoID, sha);
 
     return ResponseEntity.ok("Webhook received");
   }
