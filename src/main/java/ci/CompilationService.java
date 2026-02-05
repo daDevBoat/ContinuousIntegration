@@ -8,10 +8,19 @@ import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 import java.lang.InterruptedException;
 
+import java.io.File;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.lang.InterruptedException;
+
+import org.springframework.stereotype.Service;
+
 @Service
 public class CompilationService {
-    
-  public CompilationResult compile(File projectDir) throws IOException, InterruptedException {
+
+    public CompilationResult compile(File projectDir) throws IOException, InterruptedException {
         if(projectDir == null) {
             throw new IllegalArgumentException("Project directory cannot be null.");
         }
