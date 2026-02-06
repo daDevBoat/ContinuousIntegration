@@ -27,7 +27,17 @@ configurations {
   }
 }
 
+sourceSets {
+  main {
+    resources {
+      srcDir 'src/main/webapp'
+    }
+  }
+}
+
 dependencies {
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -102,6 +112,12 @@ tasks.register("ci") {
     dependsOn("build")
 
 }
+
+// Make sure webapp is included
+tasks.named("bootRun") {
+  sourceResources sourceSets.main
+}
+
 // Defines the order if several tasks are called 
 tasks.named("spotlessCheck").configure { mustRunAfter("spotlessApply") }
 tasks.named("check").configure { mustRunAfter("spotlessApply") }
