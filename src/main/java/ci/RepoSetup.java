@@ -18,7 +18,7 @@ public class RepoSetup {
    * @throws Exception when the directory cant be created
    * @throws Exception when the file located under the location is not a directory
    */
-  public static void createDir(String repoParentDir) {
+  public static void createDir(String repoParentDir) throws IOException {
     File dir = new File(repoParentDir);
 
     if (!dir.exists()) {
@@ -27,10 +27,10 @@ public class RepoSetup {
       boolean created = dir.mkdirs();
 
       if (!created) {
-        throw new IllegalStateException("Cannot create a directory at : " + repoParentDir);
+        throw new IOException("Cannot create a directory at : " + repoParentDir);
       }
     } else if (!dir.isDirectory()) {
-      throw new IllegalStateException("Location exists, but is not a directory : " + repoParentDir);
+      throw new IOException("Location exists, but is not a directory : " + repoParentDir);
     }
   }
 
@@ -88,11 +88,12 @@ public class RepoSetup {
    * @param repoParentDir Path to the parent directory, where we want to store the test repo
    * @param repoID The ID of the test repo - what it should be named like
    * @param sha The commit sha from the http payload
+   * @throws Exception when the sha is null, blank or only 0's
    * @throws Exception When one of the git commands could not be executed
    */
   public static void updateRepo(String repoParentDir, String repoID, String sha) {
-    if (sha == null || sha.isBlank()) {
-      throw new IllegalArgumentException("No sha in the commit message");
+    if (sha == null || sha.isBlank() || sha.equals("0000000000000000000000000000000000000000")) {
+      throw new IllegalArgumentException("No or invalid sha: " + sha);
     }
 
     String repo_path = Paths.get(repoParentDir, repoID).toString();

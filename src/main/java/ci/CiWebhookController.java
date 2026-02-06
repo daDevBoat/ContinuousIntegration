@@ -92,9 +92,25 @@ public class CiWebhookController {
     }
 
     /* Building the repo if it doesnt exist yet, and pulling newest changes */
-    RepoSetup.createDir(repoParentDir);
-    RepoSetup.cloneRepo(repoParentDir, repoID, repoSsh);
-    RepoSetup.updateRepo(repoParentDir, repoID, sha);
+    try {
+      RepoSetup.createDir(repoParentDir);
+      RepoSetup.cloneRepo(repoParentDir, repoID, repoSsh);
+      RepoSetup.updateRepo(repoParentDir, repoID, sha);
+    } catch (IllegalStateException e) {
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Git error: " + e.getMessage());
+
+    } catch (IllegalArgumentException e) {
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("Error when processing the SHA: " + e.getMessage());
+
+    } catch (IOException e) {
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("Error when creating the directory " + e.getMessage());
+    }
 
     File dir = new File(repoParentDir, repoID);
 
