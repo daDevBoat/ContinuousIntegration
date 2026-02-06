@@ -5,8 +5,24 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for compiling the Java project using Gradle.
+ * 
+ * This CompilationService class executes Gradle build commands on project directories
+ * and captures the build output and exit status. It uses the Gradle wrapper (gradlew) to 
+ * ensure consistent build execution.
+ */
 @Service
 public class CompilationService {
+
+  /**
+   * 
+   * @param projectDir the directory containing the Gradle project to compile.
+   * @return a {@link compilationResult} containing the build status, output, and exit code.
+   * @throws IOException if an I/O error occurs while reading the process output.
+   * @throws InterruptedException if the current thread is interrupted while waiting for the build process to compile.
+   * @throws IllegalArgumentException if projectDir is null, does not exists, or it is not a directory.
+   */
 
   public CompilationResult compile(File projectDir) throws IOException, InterruptedException {
     if (projectDir == null) {
@@ -49,19 +65,48 @@ public class CompilationService {
     private final String output;
     private final int exitCode;
 
+    /**
+     * CompilationResult class creates a new compilation result.
+     * 
+     * @param success {@code true} if the compilation succeded (exit code 0).
+     *                {@code false} otherwise
+     * @param output the complete build output (stdout and stderr combined).
+     * @param exitCode the process exit code; 0 indicates success, non-zero indicates failure.
+     */
+
     public CompilationResult(boolean success, String output, int exitCode) {
       this.success = success;
       this.output = output;
       this.exitCode = exitCode;
     }
 
+    /**
+     * Returns wether the compilation was successful.
+     * 
+     * @return {@code true} if the build is completed successfully (exit code 0),
+     *         {@code false} ottherwaise
+     */
+
     public boolean isSuccess() {
       return success;
     }
 
+    /**
+     * Returns the complete build output.
+     * 
+     * @return the complete build output as a string, never {@code null}
+     */
+
     public String getOutput() {
       return output;
     }
+
+    /**
+     * Returns the process exit code.
+     * 
+     * @return the exit code from the Gradle build process.
+     */
+
 
     public int getExitCode() {
       return exitCode;
