@@ -1,6 +1,10 @@
 package ci;
 
-import java.util.HashMap;
+import ci.LatestCommitStatusStore.LatestStatus;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,14 +23,25 @@ public class CommitController {
    */
   @GetMapping({"/commit", "/commit/{sha}"})
   public String commit(@PathVariable(value = "sha", required = false) String sha, Model model) {
-    if (sha == null) {
-      sha = "dummy-sha";
+    // if (sha == null) {
+    Optional<LatestStatus> latestCommit = ci.CiWebhookController.statusStore.get();
+    if (latestCommit.isPresent()) {
+      LatestStatus latestStatus = latestCommit.get();
+      Instant t = latestStatus.time();
+      ZoneId zone = ZoneId.systemDefault();
+      String formatted =
+          DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(zone).format(t);
+      model.addAttribute("latestCommitTime", formatted);
     }
-    HashMap<String, String> info = new HashMap<String, String>(); // <nameOfAttribute, value> setup
-    info.put("sha", sha);
-    info.put("build-date", "2026-02-05 14:30");
-    info.put("build-logs", "Build passed");
-    model.addAttribute("commitInfo", info);
+    model.addAttribute("latestCommit", latestCommit.orElse(null));
     return "commit";
+    // }
+    // HashMap<String, String> info = new HashMap<String, String>(); // <nameOfAttribute, value>
+    // setup
+    // info.put("sha", sha);
+    // info.put("build-date", "2026-02-05 14:30");
+    // info.put("build-logs", "Build passed");
+    // model.addAttribute("commitInfo", info);
+    // return "commit";
   }
 }

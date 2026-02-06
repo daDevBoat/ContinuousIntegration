@@ -32,6 +32,11 @@ public class CiWebhookController {
   String repoID;
 
   private CompilationService compilationService = new CompilationService();
+  public static LatestCommitStatusStore statusStore = new LatestCommitStatusStore();
+
+  // public CiWebhookController(LatestCommitStatusStore statusStore) {
+  //   this.statusStore = statusStore;
+  // }
 
   /**
    * Serves the home page of the CI server.
@@ -41,6 +46,14 @@ public class CiWebhookController {
   @GetMapping("/")
   public ResponseEntity<String> home() {
     return ResponseEntity.ok("Server is running successfully");
+  }
+
+  @GetMapping("/status/latest")
+  public ResponseEntity<?> latestStatus() {
+    return statusStore
+        .get()
+        .<ResponseEntity<?>>map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @PostMapping("/webhook/github")
@@ -147,6 +160,9 @@ public class CiWebhookController {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
           .body("Command execution was interrupted: " + e.getMessage());
     }
+
+    String sha2 = payload.get("after").asText();
+    statusStore.set(sha2, "SUCCESS", "Webhook validated");
 
     return ResponseEntity.ok("Webhook received");
   }

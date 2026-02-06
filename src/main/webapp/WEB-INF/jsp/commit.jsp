@@ -1,6 +1,15 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<p>SHA: <c:out value="${commitInfo['sha']}" /></p>
-<p>Build date: <c:out value="${commitInfo['build-date']}" /></p>
-<p>Logs: <c:out value="${commitInfo['build-logs']}" /></p>
+<c:choose>
+    <c:when test="${empty latestCommit}">
+        <p>No latest commit yet.</p>
+    </c:when>
+
+    <c:otherwise>
+        <p>SHA: <c:out value="${latestCommit.sha}" /></p>
+        <p>Timestamp: <c:out value="${latestCommitTime}" /></p>
+        <p>Status: <c:out value="${latestCommit.state}" /></p>
+        <p>Note: <c:out value="${latestCommit.message}" /></p>
+    </c:otherwise>
+</c:choose>
