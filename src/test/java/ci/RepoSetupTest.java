@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,7 +32,7 @@ class RepoSetupTest {
     /* Contract: createDir throws an exception, if a file already exists under the given path */
     Path newFilePath = temp.resolve("newDirectory");
     Files.createFile(newFilePath);
-    assertThrows(IllegalStateException.class, () -> RepoSetup.createDir(newFilePath.toString()));
+    assertThrows(IOException.class, () -> RepoSetup.createDir(newFilePath.toString()));
   }
 
   @Test
@@ -122,5 +123,27 @@ class RepoSetupTest {
     String sha = "b785fdb134699dd9e496fe213707b665bd3";
     assertThrows(
         IllegalStateException.class, () -> RepoSetup.updateRepo(newDir.toString(), testRepo, sha));
+  }
+
+  @Test
+  @Disabled
+  void updateRepo_with_sha_out_of_zeros(@TempDir Path temp) throws Exception {
+    /* Contract: updateRepo throws and excpetion when the sha is only 0's */
+    // Create Dictionary
+    Path newDir = temp.resolve("newDirectory");
+    Files.createDirectory(newDir);
+    assertTrue(Files.exists(newDir));
+
+    // Clone the repo
+    String testRepo = "testRepo";
+    RepoSetup.cloneRepo(
+        newDir.toString(), testRepo, "git@github.com:daDevBoat/ContinuousIntegration.git");
+
+    // Pull the newest changes and checkout sha:
+    String sha = "0000000000000000000000000000000000000000";
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> RepoSetup.updateRepo(newDir.toString(), testRepo, sha));
   }
 }
