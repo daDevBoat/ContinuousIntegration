@@ -9,12 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(CiWebhookController.class)
 public class CiWebhookControllerTest {
 
   @Autowired private MockMvc mockMvc;
+
+  @MockitoBean private LatestCommitStatusStore latestCommitStatusStore;
 
   /**
    * Contract: Given a running application with CiWebhookController configured, when a GET request

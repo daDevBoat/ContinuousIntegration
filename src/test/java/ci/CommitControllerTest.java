@@ -1,6 +1,6 @@
 package ci;
 
-import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,14 +19,13 @@ public class CommitControllerTest {
   @Test
   public void commitPageTest() throws Exception {
     /*
-     * Contract: Attributes should contain a map with commit info.
+     * Contract: Attributes should contain latestCommit reference.
      */
+    ci.CiWebhookController.statusStore.set("dummy", "pass", "message");
     mockMvc
         .perform(get("/commit"))
         .andExpect(status().isOk())
         .andExpect(view().name("commit"))
-        .andExpect(model().attribute("commitInfo", hasKey("sha")))
-        .andExpect(model().attribute("commitInfo", hasKey("build-date")))
-        .andExpect(model().attribute("commitInfo", hasKey("build-logs")));
+        .andExpect(model().attribute("latestCommit", notNullValue()));
   }
 }
