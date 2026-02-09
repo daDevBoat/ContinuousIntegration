@@ -66,10 +66,7 @@ public class CiWebhookController {
   public ResponseEntity<?> githubWebhook(
       @RequestHeader(value = "X-GitHub-Event", required = true) String event,
       @RequestHeader(value = "X-Hub-Signature-256", required = true) String signature,
-      @RequestBody(required = false) byte[] body,
-      @RequestHeader(required = true) String header) {
-
-    System.out.println(header);
+      @RequestBody(required = false) byte[] body) {
 
     /* Convert the body[] into a json object */
     ObjectMapper mapper = new ObjectMapper();
