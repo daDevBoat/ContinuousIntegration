@@ -78,7 +78,7 @@ public class CiWebhookController {
       System.out.println(e);
     }
 
-    GithubAPIHandler apiHandler = new GithubAPIHandler(payload);
+    GithubAPIHandler apiHandler = new GithubAPIHandler(payload)
 
     /* Checking for correct event type */
     if (!ci.Validation.validatePushEvent(event)) {
