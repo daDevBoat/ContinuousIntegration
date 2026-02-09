@@ -31,10 +31,10 @@ public class CiWebhookController {
   @Value("${ci.repoID:ContinuousIntegration}")
   String repoID;
 
-  @Value("${server.auth}")
+  @Value("${server.auth: xxxxx}")
   private String authToken;
 
-  @Value("${local.url}")
+  @Value("${local.url: xxxxx}")
   private String targetUrl;
 
   private CompilationService compilationService = new CompilationService();
