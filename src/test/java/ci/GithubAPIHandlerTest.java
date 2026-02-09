@@ -14,10 +14,10 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @SpringBootTest
 public class GithubAPIHandlerTest {
 
-  @Value("${server.auth}")
+  @Value("${server.auth:xxxx}")
   private String authToken;
 
-  @Value("${local.url}")
+  @Value("${local.url:xxxx}")
   private String targetUrl;
 
   @Test
