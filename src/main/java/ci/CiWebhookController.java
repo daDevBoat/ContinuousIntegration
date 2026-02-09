@@ -150,6 +150,10 @@ public class CiWebhookController {
       return ResponseEntity.badRequest().body("Missing commit sha");
     }
 
+    /* Sending pending status back to GitHub */
+    apiHandler.sendPost(
+        authToken, targetUrl, "pending", "Starting building and testing (cross your fingers)");
+
     /* Building the repo if it doesnt exist yet, and pulling newest changes */
     try {
       RepoSetup.createDir(repoParentDir);
