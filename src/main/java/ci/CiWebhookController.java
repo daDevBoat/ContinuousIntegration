@@ -31,6 +31,12 @@ public class CiWebhookController {
   @Value("${ci.repoID:ContinuousIntegration}")
   String repoID;
 
+  @Value("${server.auth:Invalid auth token}")
+  private String authToken;
+
+  @Value("${local.url:Invalid target url}")
+  private String targetUrl;
+
   private CompilationService compilationService = new CompilationService();
   public static LatestCommitStatusStore statusStore = new LatestCommitStatusStore();
 
@@ -71,6 +77,8 @@ public class CiWebhookController {
       // Add other error handling here with website
       System.out.println(e);
     }
+
+    GithubAPIHandler apiHandler = new GithubAPIHandler(payload);
 
     /* Checking for correct event type */
     if (!ci.Validation.validatePushEvent(event)) {
@@ -164,6 +172,7 @@ public class CiWebhookController {
     String sha2 = payload.get("after").asText();
     statusStore.set(sha2, "SUCCESS", "Webhook validated");
 
+    apiHandler.sendPost(authToken, targetUrl, "success", "Build was successful (somehow)!");
     return ResponseEntity.ok("Webhook received");
   }
 }
