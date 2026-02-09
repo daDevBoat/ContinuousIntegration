@@ -31,6 +31,12 @@ public class CiWebhookController {
   @Value("${ci.repoID:ContinuousIntegration}")
   String repoID;
 
+  @Value("${server.auth}")
+  private String authToken;
+
+  @Value("${local.url}")
+  private String targetUrl;
+
   private CompilationService compilationService = new CompilationService();
   public static LatestCommitStatusStore statusStore = new LatestCommitStatusStore();
 
@@ -60,7 +66,10 @@ public class CiWebhookController {
   public ResponseEntity<?> githubWebhook(
       @RequestHeader(value = "X-GitHub-Event", required = true) String event,
       @RequestHeader(value = "X-Hub-Signature-256", required = true) String signature,
-      @RequestBody(required = false) byte[] body) {
+      @RequestBody(required = false) byte[] body,
+      @RequestHeader(required = true) String header) {
+
+    System.out.println(header);
 
     /* Convert the body[] into a json object */
     ObjectMapper mapper = new ObjectMapper();
@@ -71,6 +80,8 @@ public class CiWebhookController {
       // Add other error handling here with website
       System.out.println(e);
     }
+
+    GithubAPIHandler apiHandler = new GithubAPIHandler(payload);
 
     /* Checking for correct event type */
     if (!ci.Validation.validatePushEvent(event)) {
@@ -164,6 +175,7 @@ public class CiWebhookController {
     String sha2 = payload.get("after").asText();
     statusStore.set(sha2, "SUCCESS", "Webhook validated");
 
+    apiHandler.sendPost(authToken, targetUrl, "success", "Build was successful (somehow)!");
     return ResponseEntity.ok("Webhook received");
   }
 }
