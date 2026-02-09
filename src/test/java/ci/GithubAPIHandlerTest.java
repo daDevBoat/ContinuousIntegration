@@ -26,13 +26,13 @@ public class GithubAPIHandlerTest {
   public void testSendPostSuccess() {
     /**
      * Contract: Given the CI server running and ngrok is activated this test should always
-     * successfully update the commit status to a commit on the test/commit_status_api branch in the
-     * "commit for testing"
+     * successfully update the commit status to successful to a commit on the test/commit_status_api
+     * branch in the "commit for testing success" commit
      */
     ObjectMapper mapper = new ObjectMapper();
 
     ObjectNode root = mapper.createObjectNode();
-    root.put("after", "16c4e7b284a595ccd723e5dd0d9fbbebfa6463c9");
+    root.put("after", "c1de4e80a87d43338955c03d5ae47667e419e977");
     ObjectNode repository = mapper.createObjectNode();
     repository.put("name", "ContinuousIntegration");
     ObjectNode owner = mapper.createObjectNode();
@@ -53,13 +53,48 @@ public class GithubAPIHandlerTest {
 
     assertDoesNotThrow(
         () -> {
-          testHandler.sendPost(
-              authToken, targetUrl, "success", "Test " + testId + " was successful");
+          testHandler.sendPost(authToken, targetUrl, "success", "Test " + testId);
         });
   }
 
   @Test
+  @Disabled
   public void testSendPostFail() {
+    /**
+     * Contract: Given the CI server running and ngrok is activated this test should always
+     * successfully update the commit status to successful to a commit on the test/commit_status_api
+     * branch in the "commit for testing fail" commit
+     */
+    ObjectMapper mapper = new ObjectMapper();
+
+    ObjectNode root = mapper.createObjectNode();
+    root.put("after", "3a6e3bf8fe4b89000a0a6dd199bee7e3790aa252");
+    ObjectNode repository = mapper.createObjectNode();
+    repository.put("name", "ContinuousIntegration");
+    ObjectNode owner = mapper.createObjectNode();
+    owner.put("name", "daDevBoat");
+
+    repository.set("owner", owner);
+    root.set("repository", repository);
+
+    // System.out.println(root.toPrettyString());
+    // System.out.println(authToken);
+
+    GithubAPIHandler testHandler = new GithubAPIHandler(root);
+    Random rand = new Random();
+
+    int testId = rand.nextInt(0, 1000000);
+
+    System.out.println("API commit status test with id: " + testId + " commencing.");
+
+    assertDoesNotThrow(
+        () -> {
+          testHandler.sendPost(authToken, targetUrl, "failure", "Test " + testId);
+        });
+  }
+
+  @Test
+  public void testSendPostInvalid() {
     /** Contract: The test should always fail as the auth token is invalid. */
     ObjectMapper mapper = new ObjectMapper();
 
