@@ -150,6 +150,9 @@ public class CiWebhookController {
         System.out.println("[CI] Exit code: " + compilationResult.getExitCode());
         System.out.println("[CI] Output:\n" + compilationResult.getOutput());
 
+        apiHandler.sendPost(
+            authToken, targetUrl, "failure", "Build was not successful (not surprisingly)!");
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(
                 "Compilation failed (exit "
