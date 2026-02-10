@@ -1,9 +1,11 @@
 package ci;
 
+import ci.Status.CommitRecord;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,12 +59,11 @@ public class CiWebhookController {
   /** Service responsible for compiling the project. */
   private CompilationService compilationService = new CompilationService();
 
-  /** Stores the status of the latest processed commit */
-  public static LatestCommitStatusStore statusStore = new LatestCommitStatusStore();
+  private final Status status;
 
-  // public CiWebhookController(LatestCommitStatusStore statusStore) {
-  //   this.statusStore = statusStore;
-  // }
+  public CiWebhookController(Status status) {
+    this.status = status;
+  }
 
   /**
    * Serves the home page of the CI server.
@@ -72,20 +73,6 @@ public class CiWebhookController {
   @GetMapping("/")
   public ResponseEntity<String> home() {
     return ResponseEntity.ok("Server is running successfully");
-  }
-
-  /**
-   * Returns the latest build status processed by the CI server.
-   *
-   * @return ResponseEntity containing the latest status if available, or HTTP 404 if no build has
-   *     been processed yet.
-   */
-  @GetMapping("/status/latest")
-  public ResponseEntity<?> latestStatus() {
-    return statusStore
-        .get()
-        .<ResponseEntity<?>>map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   /**
@@ -214,8 +201,7 @@ public class CiWebhookController {
           .body("Command execution was interrupted: " + e.getMessage());
     }
 
-    String sha2 = payload.get("after").asText();
-    statusStore.set(sha2, "SUCCESS", "Webhook validated");
+    status.put(new CommitRecord(sha, "SUCCESS", Instant.now().toString(), "Webhook validated"));
 
     apiHandler.sendPost(authToken, targetUrl, "success", "Build was successful (somehow)!");
     return ResponseEntity.ok("Webhook received");
