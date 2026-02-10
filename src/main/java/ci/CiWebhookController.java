@@ -52,7 +52,7 @@ public class CiWebhookController {
   @Value("${local.url:Invalid target url}")
   private String targetUrl;
 
-  private CiService ciService;
+  private final CiService ciService;
 
   public CiWebhookController(CiService ciService) {
     this.ciService = ciService;
@@ -128,7 +128,6 @@ public class CiWebhookController {
       return ResponseEntity.badRequest().body("Missing commit sha");
     }
 
-    /* Runs the actual build and test */
     ciService.runBuild(payload);
 
     return ResponseEntity.accepted().body("Build and test process started in the background.");
