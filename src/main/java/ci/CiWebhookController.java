@@ -129,7 +129,7 @@ public class CiWebhookController {
     }
 
     /* Runs the actual build and test */
-    ciService.runBuild(payload);
+    ciService.runBuild(payload)     // Removed semi colon here
 
     return ResponseEntity.accepted().body("Build and test process started in the background.");
   }
