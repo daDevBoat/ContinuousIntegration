@@ -16,7 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 public class CiWebhookControllerTest {
 
   @Autowired private MockMvc mockMvc;
-  @MockitoBean private Status status;
+  // @MockitoBean private Status status;
+  @MockitoBean private CiService ciService;
 
   /**
    * Contract: Given a running application with CiWebhookController configured, when a GET request
