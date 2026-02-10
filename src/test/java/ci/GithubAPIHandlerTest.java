@@ -94,6 +94,42 @@ public class GithubAPIHandlerTest {
   }
 
   @Test
+  @Disabled
+  public void testSendPostPending() {
+    /**
+     * Contract: Given the CI server running and ngrok is activated this test should always
+     * successfully update the commit status to pending to a commit on the test/commit_status_api
+     * branch in the "commit for testing pending" commit
+     */
+    ObjectMapper mapper = new ObjectMapper();
+
+    ObjectNode root = mapper.createObjectNode();
+    root.put("after", "2c42992330ff4b155b0eba29be436a085e9411ef");
+    ObjectNode repository = mapper.createObjectNode();
+    repository.put("name", "ContinuousIntegration");
+    ObjectNode owner = mapper.createObjectNode();
+    owner.put("name", "daDevBoat");
+
+    repository.set("owner", owner);
+    root.set("repository", repository);
+
+    // System.out.println(root.toPrettyString());
+    // System.out.println(authToken);
+
+    GithubAPIHandler testHandler = new GithubAPIHandler(root);
+    Random rand = new Random();
+
+    int testId = rand.nextInt(0, 1000000);
+
+    System.out.println("API commit status test with id: " + testId + " commencing.");
+
+    assertDoesNotThrow(
+        () -> {
+          testHandler.sendPost(authToken, targetUrl, "pending", "Test " + testId);
+        });
+  }
+
+  @Test
   public void testSendPostInvalid() {
     /** Contract: The test should always fail as the auth token is invalid. */
     ObjectMapper mapper = new ObjectMapper();
