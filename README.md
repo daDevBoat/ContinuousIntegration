@@ -29,10 +29,8 @@ We agreed to follow a continuous integration workstyle, where for every feature 
 
 ### Team
 
-In what state are you in? Why? What are obstacles to reach the next state?
-
 When evaluating the checklist for Team in the Essence standard, it is clear that we are in the state Collaborating and have fulfilled some of the points in Performing.
 
-It is clear that we are in the state Collaborating since the we fulfill all the points for the previous states as well as all the points for the Collaborating state. We are working as one cohesive unit by often sitting together on campus and working, as well as splitting up the work appropriately. Our communication is open and honest. All team members know and trust each other, and are focused on achieving the team mission.
+It is clear that we are in the state Collaborating since we fulfill all the points for the previous states as well as all the points for the Collaborating state. We are working as one cohesive unit by splitting up the work and working together on the parts that need collaboration. Our communication is open and honest, all team members know and trust each other, and are focused on achieving the team mission.
 
-The obstacles to reach the next state consists of two things. One is that we need to minimize the avoidable backtracking and reworking. As it is now we still sometimes have to backtrack and rework our solutions because our original outline of the program might have been wrong or because different team members' implementations do not align with each other. The other obstacle for reaching the next state is to continously identify and eliminate wasted work and potential wasted work. 
+The obstacles to reach the next state consists of two things. One is that we need to minimize the avoidable backtracking and reworking. Right now we still have to backtrack and rework our solutions at times, because our original outline of the program might have been wrong, or because different team members' implementations do not align with each other. The second obstacle for reaching the next state is to continously identify and eliminate wasted work and potential wasted work. Right now we still get some wasted work at times, for example when one member's code has to be modified to fit another member's code. 
