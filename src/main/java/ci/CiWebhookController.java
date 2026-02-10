@@ -1,11 +1,7 @@
 package ci;
 
-import ci.Status.CommitRecord;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.IOException;
-import java.time.Instant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,9 +52,6 @@ public class CiWebhookController {
   @Value("${local.url:Invalid target url}")
   private String targetUrl;
 
-  /** Service responsible for compiling the project. */
-  private CompilationService compilationService = new CompilationService();
-
   private final Status status;
 
   public CiWebhookController(Status status) {
@@ -103,8 +96,6 @@ public class CiWebhookController {
       System.out.println(e);
     }
 
-    GithubAPIHandler apiHandler = new GithubAPIHandler(payload);
-
     /* Checking for correct event type */
     if (!ci.Validation.validatePushEvent(event)) {
       return ResponseEntity.badRequest()
@@ -137,73 +128,10 @@ public class CiWebhookController {
       return ResponseEntity.badRequest().body("Missing commit sha");
     }
 
-    /* Sending pending status back to GitHub */
-    apiHandler.sendPost(
-        authToken, targetUrl, "pending", "Starting building and testing (cross your fingers)");
+    CiService procService = new CiService();
 
-    /* Building the repo if it doesnt exist yet, and pulling newest changes */
-    try {
-      RepoSetup.createDir(repoParentDir);
-      RepoSetup.cloneRepo(repoParentDir, repoID, repoSsh);
-      RepoSetup.updateRepo(repoParentDir, repoID, sha);
-    } catch (IllegalStateException e) {
-      e.printStackTrace();
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body("Git error: " + e.getMessage());
+    procService.runBuild(payload);
 
-    } catch (IllegalArgumentException e) {
-      e.printStackTrace();
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body("Error when processing the SHA: " + e.getMessage());
-
-    } catch (IOException e) {
-      e.printStackTrace();
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body("Error when creating the directory " + e.getMessage());
-    }
-
-    File dir = new File(repoParentDir, repoID);
-
-    /* Check if the directory exists */
-    if (!dir.isDirectory()) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body("Repo dir was not found '" + dir.getAbsolutePath() + "'.");
-    }
-    try {
-      /* Starts the compilation */
-      System.out.println("[CI] Starting Compilation...");
-      CompilationService.CompilationResult compilationResult = compilationService.compile(dir);
-
-      if (!compilationResult.isSuccess()) {
-        System.out.println("[CI] Compilation FAILED");
-        System.out.println("[CI] Exit code: " + compilationResult.getExitCode());
-        System.out.println("[CI] Output:\n" + compilationResult.getOutput());
-
-        apiHandler.sendPost(
-            authToken, targetUrl, "failure", "Build was not successful (not surprisingly)!");
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(
-                "Compilation failed (exit "
-                    + compilationResult.getExitCode()
-                    + ")\n"
-                    + compilationResult.getOutput());
-      }
-      System.out.println("[CI] Compilation SUCCEEDED");
-    } catch (IOException e) {
-      e.printStackTrace();
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body("Failed to parse webhook or execute commands: " + e.getMessage());
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      e.printStackTrace();
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body("Command execution was interrupted: " + e.getMessage());
-    }
-
-    status.put(new CommitRecord(sha, "SUCCESS", Instant.now().toString(), "Webhook validated"));
-
-    apiHandler.sendPost(authToken, targetUrl, "success", "Build was successful (somehow)!");
-    return ResponseEntity.ok("Webhook received");
+    return ResponseEntity.accepted().body("Build and test process started in the background.");
   }
 }
