@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.time.Instant;
+import java.util.Arrays;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,7 @@ public class CommitControllerTest {
      */
     when(status.getLatest())
         .thenReturn(
-            Optional.of(
-                new Status.CommitRecord("dummy", "pass", Instant.now().toString(), "message")));
+            Optional.of(new Status.CommitRecord("dummy", "pass", Arrays.asList("message"))));
 
     mockMvc
         .perform(get("/commit"))

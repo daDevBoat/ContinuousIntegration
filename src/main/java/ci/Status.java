@@ -11,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +32,13 @@ import org.springframework.stereotype.Service;
 public class Status {
 
   /** Record that represents a single commit and its associated information. */
-  public record CommitRecord(String sha, String state, String time, String message) {
-    ;
+  public record CommitRecord(String sha, String state, String time, List<String> logs) {
+
+    private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    public CommitRecord(String sha, String state, List<String> logs) {
+      this(sha, state, LocalDateTime.now().format(FMT), logs);
+    }
   }
 
   // Latest commit

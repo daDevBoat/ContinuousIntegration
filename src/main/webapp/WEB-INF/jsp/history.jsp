@@ -22,7 +22,6 @@
             <strong><a href="/commit/${commit.sha}"><c:out value="${commit.sha}" /></a></strong>
             | <c:out value="${commit.state}" />
             | <c:out value="${commit.time}" />
-            | <c:out value="${commit.message}" />
           </li>
         </c:forEach>
       </ul>

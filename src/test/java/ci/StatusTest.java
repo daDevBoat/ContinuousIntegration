@@ -8,7 +8,7 @@ import ci.Status.CommitRecord;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Instant;
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -23,8 +23,7 @@ public class StatusTest {
      * should be persisted in the file as specified by the Status constructor.
      */
     Status status = new Status(tempDir.resolve("commits.json"));
-    CommitRecord latestStatus =
-        new CommitRecord("dummy-sha", "pass", Instant.now().toString(), "message");
+    CommitRecord latestStatus = new CommitRecord("dummy-sha", "pass", Arrays.asList("message"));
 
     status.put(latestStatus);
 
@@ -44,13 +43,21 @@ public class StatusTest {
     Path commitsFilePath = tempDir.resolve("commits.json");
 
     String json =
-        """
-      {
-        "sha1": { "sha": "sha1", "state": "SUCCESS", "time": "2026-02-08T10:00:00Z",
-         "message": "m1" },
-        "sha2": { "sha": "sha2", "state": "FAIL",    "time": "2026-02-08T11:00:00Z",
-         "message": "m2" }
-      }
+"""
+{
+  "sha1": {
+    "sha": "sha1",
+    "state": "SUCCESS",
+    "time": "2026-02-08 10:00:00",
+    "logs": ["m1"]
+  },
+  "sha2": {
+    "sha": "sha2",
+    "state": "FAIL",
+    "time": "2026-02-08 11:00:00",
+    "logs": ["m2"]
+  }
+}
       """;
 
     Files.writeString(commitsFilePath, json);
@@ -70,13 +77,21 @@ public class StatusTest {
     Path commitsFilePath = tempDir.resolve("commits.json");
 
     String json =
-        """
-      {
-        "sha1": { "sha": "sha1", "state": "SUCCESS", "time": "2026-02-08T10:00:00Z",
-         "message": "m1" },
-        "sha2": { "sha": "sha2", "state": "FAIL",    "time": "2026-02-08T11:00:00Z",
-         "message": "m2" }
-      }
+"""
+{
+  "sha1": {
+    "sha": "sha1",
+    "state": "SUCCESS",
+    "time": "2026-02-08 10:00:00",
+    "logs": ["m1"]
+  },
+  "sha2": {
+    "sha": "sha2",
+    "state": "FAIL",
+    "time": "2026-02-08 11:00:00",
+    "logs": ["m2"]
+  }
+}
       """;
 
     Files.writeString(commitsFilePath, json);
@@ -96,13 +111,21 @@ public class StatusTest {
     Path commitsFilePath = tempDir.resolve("commits.json");
 
     String json =
-        """
-      {
-        "sha1": { "sha": "sha1", "state": "SUCCESS", "time": "2026-02-08T10:00:00Z",
-        "message": "m1" },
-        "sha2": { "sha": "sha2", "state": "FAIL",    "time": "2026-02-08T11:00:00Z",
-        "message": "m2" }
-      }
+"""
+{
+  "sha1": {
+    "sha": "sha1",
+    "state": "SUCCESS",
+    "time": "2026-02-08 10:00:00",
+    "logs": ["m1"]
+  },
+  "sha2": {
+    "sha": "sha2",
+    "state": "FAIL",
+    "time": "2026-02-08 11:00:00",
+    "logs": ["m2"]
+  }
+}
       """;
 
     Files.writeString(commitsFilePath, json);
@@ -111,5 +134,32 @@ public class StatusTest {
     status.init();
     assertFalse(status.getCommits().isEmpty());
     assertEquals(status.getCommits().size(), 2);
+  }
+
+  @Test
+  public void logsForCommitWithLogsIsNonEmpty() throws IOException {
+    /**
+     * Contract: When a commit has been read that includes logs, the logs attribute for that commit
+     * record should contain the logs.
+     */
+    Path commitsFilePath = tempDir.resolve("commits.json");
+
+    String json =
+"""
+{
+  "sha1": {
+    "sha": "sha1",
+    "state": "SUCCESS",
+    "time": "2026-02-08 10:00:00",
+    "logs": ["m1"]
+  }
+}
+      """;
+
+    Files.writeString(commitsFilePath, json);
+    Status status = new Status(tempDir.resolve("commits.json"));
+
+    status.init();
+    assertTrue(status.getCommits().getFirst().logs().getFirst().equals("m1"));
   }
 }
