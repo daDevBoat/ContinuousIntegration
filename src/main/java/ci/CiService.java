@@ -38,6 +38,12 @@ public class CiService {
   @Value("${local.url:Invalid target url}")
   private String targetUrl;
 
+  private final Status status;
+
+  public CiService(Status status) {
+    this.status = status;
+  }
+
   /** Service responsible for compiling the project. */
   private CompilationService compilationService = new CompilationService();
 
@@ -89,7 +95,12 @@ public class CiService {
       if (!compilationResult.isSuccess()) {
         System.out.println("[CI] Compilation FAILED");
         System.out.println("[CI] Exit code: " + compilationResult.getExitCode());
-        System.out.println("[CI] Output:\n" + compilationResult.getOutput());
+
+        // Save the failed build
+        // status.put(new CommitRecord(sha, "FAILURE", Instant.now().toString(),
+        // compilationResult.getOutput()));
+        // System.out.println("[CI] Output:\n" + compilationResult.getOutput()); -> Delete this
+        // line.
 
         apiHandler.sendPost(
             authToken,
@@ -99,12 +110,25 @@ public class CiService {
         return;
       }
       System.out.println("[CI] Compilation SUCCEEDED");
+
+      // status.put(new CommitRecord(sha, "SUCCESS", Instant.now().toString(),
+      // compilationResult.getOutput()));
+
     } catch (IOException e) {
+      /* Create a list with the exception message. */
+      // status.put(new CommitRecord(sha, "ERROR", Instant.now().toString(), List.of("Failed to
+      // execute build process: " + e.getMessage())));
+
       e.printStackTrace();
       apiHandler.sendPost(
           authToken, targetUrl, "failure", "Failed to parse webhook or execute commands");
       return;
+
     } catch (InterruptedException e) {
+      /* Create a list with the exception message. */
+      // status.put(new CommitRecord(sha, "ERROR", Instant.now().toString(), List.of("Command
+      // execution was interrupted: " + e.getMessage())));
+
       Thread.currentThread().interrupt();
       e.printStackTrace();
       apiHandler.sendPost(authToken, targetUrl, "failure", "Command execution was interrupted");

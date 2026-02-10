@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,12 +50,14 @@ public class CompilationTest {
   public void testCompilationResultModel() {
     /* Contract: CompilationResult must correctly report a successful build
      * where isSuccess() returns truue, getExitCode() returns 0,
-     * and getOutput() returns the expected build output string. */
+     * and getOutput() returns a non-empty list with "Build successful" as last element. */
+
+    List<String> logs = new ArrayList<>(List.of("> Task :compileJava", "Build successful"));
     CompilationService.CompilationResult result =
-        new CompilationService.CompilationResult(true, "Build successful", 0);
+        new CompilationService.CompilationResult(true, logs, 0);
 
     assertTrue(result.isSuccess());
-    assertEquals("Build successful", result.getOutput());
+    assertEquals("Build successful", result.getOutput().get(result.getOutput().size() - 1));
     assertEquals(0, result.getExitCode());
   }
 
@@ -62,12 +66,16 @@ public class CompilationTest {
     /* Contract: CompilationResult must correctly report a failed build,
      * where isSuccess() return false, getExitCode() returns a non-zero value, and
      * getOutput() contains the error message from the build process. */
+
+    List<String> logs =
+        new ArrayList<>(List.of("> Task :compileJava FAILED", "Compilation failed (exit 1)"));
     CompilationService.CompilationResult result =
-        new CompilationService.CompilationResult(false, "Error: compilation failed", 127);
+        new CompilationService.CompilationResult(false, logs, 1);
 
     assertFalse(result.isSuccess());
-    assertEquals(127, result.getExitCode());
-    assertTrue(result.getOutput().contains("compilation failed"));
+    assertEquals(1, result.getExitCode());
+    assertTrue(
+        result.getOutput().get(result.getOutput().size() - 1).contains("Compilation failed"));
   }
 
   @Test
@@ -75,9 +83,11 @@ public class CompilationTest {
     /* Contract: CompilationResult must always provide a non-null output string,
      * regardless of wether the build succeeded or failed.  */
     CompilationService.CompilationResult success =
-        new CompilationService.CompilationResult(true, "output", 0);
+        new CompilationService.CompilationResult(
+            true, new ArrayList<>(List.of("Build successful")), 0);
     CompilationService.CompilationResult failure =
-        new CompilationService.CompilationResult(false, "error", 1);
+        new CompilationService.CompilationResult(
+            false, new ArrayList<>(List.of("Compilation failed (exit 1)")), 1);
 
     assertNotNull(success.getOutput());
     assertNotNull(failure.getOutput());

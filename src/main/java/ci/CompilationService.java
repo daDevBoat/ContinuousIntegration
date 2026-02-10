@@ -1,8 +1,13 @@
 package ci;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 /**
@@ -43,17 +48,23 @@ public class CompilationService {
 
     Process p = pb.start();
 
-    String output = new String(p.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+    List<String> output;
+    try (BufferedReader reader =
+        new BufferedReader(new InputStreamReader(p.getInputStream(), StandardCharsets.UTF_8))) {
+      output = reader.lines().collect(Collectors.toCollection(ArrayList::new));
+    }
 
     int exitCode = p.waitFor();
     boolean success = (exitCode == 0);
 
     System.out.println("[COMPILATION] Exit code: " + exitCode);
+
     if (success) {
       System.out.println("[COMPILATION] Build successful");
+      output.add("Build successful");
     } else {
       System.out.println("[COMPILATION] Build failed");
-      System.out.println("[COMPILATION] Output:\n" + output);
+      output.add("Compilation failed (exit " + exitCode + ")");
     }
 
     return new CompilationResult(success, output, exitCode);
@@ -62,7 +73,7 @@ public class CompilationService {
   public static class CompilationResult {
 
     private final boolean success;
-    private final String output;
+    private final List<String> output;
     private final int exitCode;
 
     /**
@@ -73,7 +84,7 @@ public class CompilationService {
      * @param output the complete build output (stdout and stderr combined).
      * @param exitCode the process exit code; 0 indicates success, non-zero indicates failure.
      */
-    public CompilationResult(boolean success, String output, int exitCode) {
+    public CompilationResult(boolean success, List<String> output, int exitCode) {
       this.success = success;
       this.output = output;
       this.exitCode = exitCode;
@@ -94,7 +105,7 @@ public class CompilationService {
      *
      * @return the complete build output as a string, never {@code null}
      */
-    public String getOutput() {
+    public List<String> getOutput() {
       return output;
     }
 
