@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.time.Instant;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,7 @@ public class HistoryControllerTest {
      */
     when(status.getCommits())
         .thenReturn(
-            Arrays.asList(
-                new Status.CommitRecord("dummy", "pass", Instant.now().toString(), "message")));
+            Arrays.asList(new Status.CommitRecord("dummy", "pass", Arrays.asList("message"))));
     mockMvc
         .perform(get("/history"))
         .andExpect(status().isOk())

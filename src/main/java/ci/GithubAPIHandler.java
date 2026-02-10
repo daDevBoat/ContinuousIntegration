@@ -6,8 +6,6 @@ import java.util.Map;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-// For checking status codes
-// Required for Spring Boot 3+
 import reactor.core.publisher.Mono;
 
 public class GithubAPIHandler {
@@ -62,7 +60,7 @@ public class GithubAPIHandler {
 
     try {
       String response = responseMono.block();
-      System.out.println("Response: " + response);
+      // System.out.println("Response: " + response);
     } catch (WebClientResponseException e) { // Wrong formating, sha, etc. 4xx and 5xx errors
       System.err.println("API Call Failed!");
       System.err.println("Status Code: " + e.getStatusCode());
