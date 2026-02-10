@@ -1,5 +1,7 @@
-# ContinuousIntegration
-The repo for the Continuous Integration assignment 
+# Continuous Integration
+This project implements a small continuous intergation CI server containing only the core features of continuous integration.
+
+When a push occurs on the repository, the CI server first receives the webhook payload, then identifies the affected branch and then checks out that revision. Then the server builds the project, executes the automated tests, sets the commit status on the repository, and updates the build history. The build history persists even if the server is rebooted. 
 
 ## How to run
 
