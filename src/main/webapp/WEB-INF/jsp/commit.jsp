@@ -8,7 +8,7 @@
 
     <c:otherwise>
         <p>SHA: <c:out value="${latestCommit.sha}" /></p>
-        <p>Timestamp: <c:out value="${latestCommitTime}" /></p>
+        <p>Timestamp: <c:out value="${latestCommit.time}" /></p>
         <p>Status: <c:out value="${latestCommit.state}" /></p>
         <p>Note: <c:out value="${latestCommit.message}" /></p>
     </c:otherwise>
