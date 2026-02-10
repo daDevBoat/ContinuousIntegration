@@ -5,16 +5,13 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import org.springframework.stereotype.Service;
 
-/**
- * Stores the most recent commit status in the memory for quick access.
- */
-
+/** Stores the most recent commit status in the memory for quick access. */
 @Service
 public class LatestCommitStatusStore {
 
   /**
    * Imutable snapshot of the latest status update
-   * 
+   *
    * @param sha commit SHA the status applies to
    * @param status status state
    * @param time time the status was recorded
@@ -28,7 +25,7 @@ public class LatestCommitStatusStore {
 
   /**
    * Stores a new latest status snapshot with the current time.
-   * 
+   *
    * @param sha commit SHA the status applies to
    * @param state status state
    * @param message status message
@@ -39,7 +36,7 @@ public class LatestCommitStatusStore {
 
   /**
    * Returns the most recent status snapshot if it exists.
-   * 
+   *
    * @return latest status or empty if none has been recorded
    */
   public Optional<LatestStatus> get() {
