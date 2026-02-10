@@ -49,11 +49,6 @@ public class Status {
 
   public Status(Path commitsFilePath) {
     this.commitsFilePath = commitsFilePath;
-    this(Paths.get("build", "commits.json"));
-  }
-
-  public Status(Path commitsFilePath) {
-    this.commitsFilePath = commitsFilePath;
     this.mapper = new ObjectMapper();
   }
 
