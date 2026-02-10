@@ -13,31 +13,51 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller that exposes the Continuous Integration (CI) webhook endpoints.
+ *
+ * <p>This controller is responsible for: - Receiving Github webhook events. - Validating webhook
+ * signatures and repository information. - Fetching and updating the repository. - Triggering the
+ * compilation process. - Storing and exposing the latest build status
+ *
+ * <p>The controller is designed to be used as a lightweight CI server that reacts to Github push
+ * events.
+ */
 @RestController
 public class CiWebhookController {
 
+  /** Shared secret key used to validate Github webhook signatures. */
   @Value("${sharedKey:xxxxxxxx}")
   private String sharedKey;
 
+  /** Full GitHub repository name expected in the webhokk payload. */
   @Value("${git.repoName:daDevBoat/ContinuousIntegration}")
   private String repoName;
 
+  /** Local parent directory where the Git repository will be cloned. */
   @Value("${ci.repoParentDir:not a file}")
   private String repoParentDir;
 
+  /** SSH URL of the Git repository used for cloning and pulling updates. */
   @Value("${ci.repoSsh:git-ssh}")
   String repoSsh;
 
+  /** Local directory name of the repository. */
   @Value("${ci.repoID:ContinuousIntegration}")
   String repoID;
 
+  /** Authentication token used when sending build status notifications. */
   @Value("${server.auth:Invalid auth token}")
   private String authToken;
 
+  /** Target URL where CI build results are reported after processing a webhook. */
   @Value("${local.url:Invalid target url}")
   private String targetUrl;
 
+  /** Service responsible for compiling the project. */
   private CompilationService compilationService = new CompilationService();
+
+  /** Stores the status of the latest processed commit */
   public static LatestCommitStatusStore statusStore = new LatestCommitStatusStore();
 
   // public CiWebhookController(LatestCommitStatusStore statusStore) {
@@ -54,6 +74,12 @@ public class CiWebhookController {
     return ResponseEntity.ok("Server is running successfully");
   }
 
+  /**
+   * Returns the latest build status processed by the CI server.
+   *
+   * @return ResponseEntity containing the latest status if available, or HTTP 404 if no build has
+   *     been processed yet.
+   */
   @GetMapping("/status/latest")
   public ResponseEntity<?> latestStatus() {
     return statusStore
@@ -62,6 +88,18 @@ public class CiWebhookController {
         .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  /**
+   * Handles GitHub webhook events
+   *
+   * <p>This endpoint: - Validates the event type. - Verifies the webhook signature. - Checks the
+   * repository information. - Fetches and updates the repository. - Triggers the compilation
+   * process. - Stores and reports the build result.
+   *
+   * @param event the GitHub event type (expected to be {@code push}).
+   * @param signature the SHA-256 signature sent by GitHub.
+   * @param body the raw JSON payload of the webhook request.
+   * @return ResponseEntity indicating success or the reason for failure.
+   */
   @PostMapping("/webhook/github")
   public ResponseEntity<?> githubWebhook(
       @RequestHeader(value = "X-GitHub-Event", required = true) String event,
@@ -100,13 +138,13 @@ public class CiWebhookController {
       return ResponseEntity.badRequest().body("Signature was invalid");
     }
 
-    /* Checking for correct repo */
+    /* Checking for correct repository */
     if (!ci.Validation.validateRepoName(payload, repoName)) {
       return ResponseEntity.badRequest()
           .body("The repo name is not: " + repoName + ", while it is required to be so");
     }
 
-    /* Checking if sha exists */
+    /* Extract commit SHA */
     String sha = payload.path("after").asText("");
     if (sha.isBlank()) {
       return ResponseEntity.badRequest().body("Missing commit sha");
