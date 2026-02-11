@@ -1,10 +1,9 @@
-package ci;
+package ci.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import ci.service.Status;
 import ci.service.Status.CommitRecord;
 import java.io.IOException;
 import java.nio.file.Files;

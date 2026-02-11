@@ -1,4 +1,4 @@
-package ci;
+package ci.util;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import ci.util.RepoSetup;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
