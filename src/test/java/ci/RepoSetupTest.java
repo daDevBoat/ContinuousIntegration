@@ -1,5 +1,6 @@
 package ci;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,6 +34,23 @@ class RepoSetupTest {
     Path newFilePath = temp.resolve("newDirectory");
     Files.createFile(newFilePath);
     assertThrows(IOException.class, () -> RepoSetup.createDir(newFilePath.toString()));
+  }
+
+  @Test
+  void removeDirSuccess(@TempDir Path temp) throws Exception {
+    /* Contract: removeDir removes a directory if a directory already exists under the given path */
+    Path newFilePath = temp.resolve("newDirectory");
+    Files.createDirectory(newFilePath);
+    assertDoesNotThrow(() -> RepoSetup.removeDir(newFilePath.toString()));
+  }
+
+  @Test
+  void removeDirFailureNoDirExists(@TempDir Path temp) throws Exception {
+    /* Contract: removeDir removes a directory if a directory already exists under
+     * the given path, in this caseno file exists
+     */
+    Path newFilePath = temp.resolve("newDirectory");
+    assertThrows(IOException.class, () -> RepoSetup.removeDir(newFilePath.toString()));
   }
 
   @Test

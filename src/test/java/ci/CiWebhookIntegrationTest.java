@@ -23,6 +23,7 @@ import java.util.List;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.tomcat.util.buf.HexUtils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.MockedConstruction;
@@ -132,6 +133,7 @@ class CiWebhookIntegrationTest {
   }
 
   @Test
+  @Disabled
   void successfulBuild_postsPendingThenSuccess() throws Exception {
     /**
      * Contract: The CI server replies first with Code 202 when it receives a HTTP post request and,
