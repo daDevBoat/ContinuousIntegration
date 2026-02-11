@@ -5,11 +5,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/**
+ * CommitController is a Spring MVC controller for handling
+ * commit detail requests
+ */
 @Controller
 public class CommitController {
 
   private final Status status;
 
+  /** 
+   * Constructs a CommitController with the specified Status
+   * service
+   * 
+   * @param status the Status service used to retrieve the 
+   * commit information
+   */
   public CommitController(Status status) {
     this.status = status;
   }
