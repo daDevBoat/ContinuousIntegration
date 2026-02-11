@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 public class RepoSetup {
 
@@ -32,6 +33,24 @@ public class RepoSetup {
     } else if (!dir.isDirectory()) {
       throw new IOException("Location exists, but is not a directory : " + repoParentDir);
     }
+  }
+
+  /**
+   * Remove a directory at the location of repo_path -> Can be changed in the
+   * application.propoerties file
+   *
+   * @param repoParentDir Path to the parent directory, where we want to store the test repo
+   * @throws IOException in case deletion is unsuccessful or dir does not exist
+   * @throws IllegalArgumentException if the file located under the location is not a directory
+   */
+  public static void removeDir(String repoParentDir) throws IOException {
+    File dir = new File(repoParentDir);
+
+    if (!dir.exists()) {
+      throw new IOException("Directoty does not exist at: " + repoParentDir);
+    }
+
+    FileUtils.deleteDirectory(dir);
   }
 
   /**

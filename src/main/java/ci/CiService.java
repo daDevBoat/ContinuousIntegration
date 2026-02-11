@@ -58,27 +58,33 @@ public class CiService {
         authToken, targetUrl, "pending", "Starting building and testing (cross your fingers)");
 
     String sha = payload.path("after").asText("");
+    String runDir = repoParentDir + "/test/" + sha;
 
     /* Building the repo if it doesnt exist yet, and pulling newest changes */
     try {
-      RepoSetup.createDir(repoParentDir);
-      RepoSetup.cloneRepo(repoParentDir, repoID, repoSsh);
-      RepoSetup.updateRepo(repoParentDir, repoID, sha);
-    } catch (IllegalStateException e) {
+      RepoSetup.createDir(runDir);
+      RepoSetup.cloneRepo(runDir, repoID, repoSsh);
+      RepoSetup.updateRepo(runDir, repoID, sha);
+    } catch (Exception e) {
+      String errorMsg = "";
+      switch (e) {
+        case IllegalStateException is -> errorMsg = "Git error: Illegal State";
+        case IllegalArgumentException ia -> errorMsg = "Error when processing the SHA";
+        case IOException io -> errorMsg = "Error when creating the directory";
+        default -> errorMsg = "Error when trying to clone remote repo";
+      }
       e.printStackTrace();
-      apiHandler.sendPost(authToken, targetUrl, "failure", "Git error: Illegal State");
-      return;
-    } catch (IllegalArgumentException e) {
-      e.printStackTrace();
-      apiHandler.sendPost(authToken, targetUrl, "failure", "Error when processing the SHA");
-      return;
-    } catch (IOException e) {
-      e.printStackTrace();
-      apiHandler.sendPost(authToken, targetUrl, "failure", "Error when creating the directory");
+      apiHandler.sendPost(authToken, targetUrl, "failure", errorMsg);
+
+      try {
+        RepoSetup.removeDir(runDir);
+      } catch (Exception inner) {
+        inner.printStackTrace();
+      }
       return;
     }
 
-    File dir = new File(repoParentDir, repoID);
+    File dir = new File(runDir, repoID);
 
     /* Check if the directory exists */
     if (!dir.isDirectory()) {
@@ -93,6 +99,12 @@ public class CiService {
       /* Starts the compilation */
       System.out.println("[CI] Starting Compilation...");
       CompilationService.CompilationResult compilationResult = compilationService.compile(dir);
+
+      try {
+        RepoSetup.removeDir(runDir);
+      } catch (Exception rm) {
+        rm.printStackTrace();
+      }
 
       if (!compilationResult.isSuccess()) {
         System.out.println("[CI] Compilation FAILED");
