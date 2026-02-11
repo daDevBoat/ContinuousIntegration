@@ -1,4 +1,4 @@
-package ci;
+package ci.controller;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.when;
@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import ci.controller.HistoryController;
 import ci.service.Status;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;

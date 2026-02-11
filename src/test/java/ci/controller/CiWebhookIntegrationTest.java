@@ -1,4 +1,4 @@
-package ci;
+package ci.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
