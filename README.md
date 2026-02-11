@@ -3,6 +3,19 @@ This project implements a small continuous intergation CI server containing only
 
 When a push occurs on the repository, the CI server first receives the webhook payload, then identifies the affected branch and then checks out that revision. Then the server builds the project, executes the automated tests, sets the commit status on the repository, and updates the build history. The build history persists even if the server is rebooted. 
 
+## Build list urls
+There is one webhook setup on github per group member which is configured to send to to that group member's
+ngrok url. Any student can run the CI-server, so there are five urls with each commit history available at 
+the page /history:
+| Team member | History url |
+| ---- | ---- |
+| Alexander Mannertorn  | https://luetic-interrelatedly-melissia.ngrok-free.dev/history |
+| Arnau Pelechano García | https://ariah-interbrachial-natisha.ngrok-free.dev/history |
+| Elias Richard Næss | https://ara-listless-sinistrorsely.ngrok-free.dev/history |
+| Jannis Häffner | https://corban-hyperscrupulous-jesse.ngrok-free.dev/history |
+| Jonatan Bölenius | https://phagolytic-bertram-weighty.ngrok-free.dev/history |
+
+
 ## How to run
 
 ### Prerequisites
