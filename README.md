@@ -37,6 +37,21 @@ the page /history:
 - Build with `./gradlew build`
 - Test with `./gradlew test`
 
+## Test execution: Implementation and testing
+### Implementation
+Test execution is implemented by running `./gradlew build` in a bash shell (see CompilationService.java). The build command includes testing, and by passing the `-l` argument to bash the shell in which the build is running has access to the same resources (ssh keys etc.) as the user, such that cloning and checking out a build is possible. The method waits for the process to finish and returns a CompilationResult with:
+* The process `exit code` which is **0** if the build/tests succeeded, and otherwise not
+* A `success` boolean, which is true if the exit code is **0**
+* The `output` logs from the process, as a list of strings, which is used to store commit/build history
+### Testing
+The test execution workflow is unit tested...
+* ...by testing to compile different invalid directories/files
+* ...by testing the CompilationResult model by checking that it manages both successful and failed results
+* ...by testing the getOutput() method for CompilationResult for two cases
+
+The compilation logic is a part of the webhook integration test where it is mocked and used to see that the webhook returns the correct status. This tests the that the interaction between the compilation and the result that the webhook sends to Github is functioning correctly.
+
+
 ## Way-of-working:
 We agreed to follow a continuous integration workstyle, where for every feature or fix identified, we create an issue. Every issue is its own branch. After the work on an issue is completed, the issue branch will be rebased, the commits will be squashed, and then merged with main. This allows the main branch to have an easily understood commit history, with each commit representing one issue, while also allowing for tracing errors or bugs to a specific commit.
 
