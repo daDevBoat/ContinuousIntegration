@@ -37,17 +37,30 @@ the page /history:
 - Build with `./gradlew build`
 - Test with `./gradlew test`
 
-## Test execution: Implementation and testing
+## Compilation and Test execution: Implementation and testing
+### Overview
+The compilation and testing feature is implemented in the CompilationService class.
+When a push event is received via the webhook the CI server automatically compiles the project on the branch where the change was made, as specified in the HTTP payload.
+
 ### Implementation
-Test execution is implemented by running `./gradlew build` in a bash shell (see CompilationService.java). The build command includes testing, and by passing the `-l` argument to bash the shell in which the build is running has access to the same resources (ssh keys etc.) as the user, such that cloning and checking out a build is possible. The method waits for the process to finish and returns a CompilationResult with:
+The CompilationService.compile() method:
+- Validates the project directory (must be non-null, existing, and a directory).
+- Executes ./gradlew build via ProccessBuilder in the specified directory.
+- Captures the build output line by line as List<String>
+- Appends a message as the last element of the output list saying the build succeeded or failed.
+- Returns a CompilationResult object containing the success status, output logs, and exit code.
+
+By running `./gradlew build` in a bash shell (see `CompilationService.java`). The build command both builds and tests the program. Furthermore by passing the `-l` argument to bash the shell in which the build is running has access to the same resources (ssh keys etc.) as the user, such that cloning and checking out a build is possible. The method waits for the process to finish and returns a CompilationResult with:
 * The process `exit code` which is **0** if the build/tests succeeded, and otherwise not
 * A `success` boolean, which is true if the exit code is **0**
 * The `output` logs from the process, as a list of strings, which is used to store commit/build history
+
+This result is later persisted in the Status service as a CommitRecord containing the build result: SHA, build status, (“SUCCESS”, “FAILURE”, “ERROR”), timestamp and build logs.
 ### Testing
-The test execution workflow is unit tested...
-* ...by testing to compile different invalid directories/files
-* ...by testing the CompilationResult model by checking that it manages both successful and failed results
-* ...by testing the getOutput() method for CompilationResult for two cases
+The compilation and testing feature is tested in the `CompilationTest` class, which contains 6 unit tests covering the test cases needed to cover all the requirements, this is done through... 
+* ...testing to compile different invalid directories/files
+* ...testing the CompilationResult model by checking that it manages both successful and failed results
+* ...testing the getOutput() method for CompilationResult for two cases
 
 The compilation logic is a part of the webhook integration test where it is mocked and used to see that the webhook returns the correct status. This tests the that the interaction between the compilation and the result that the webhook sends to Github is functioning correctly.
 
