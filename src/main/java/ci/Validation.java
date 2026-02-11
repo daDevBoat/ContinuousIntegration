@@ -9,12 +9,10 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.tomcat.util.buf.HexUtils;
 
 /**
- * Validation class for authentication and validation of 
- * Github webhook requests
- * 
- * <p>This class provides functions to verify that incoming
- * webhook event are valid by checking the event type,
- * repository name, and HMAC-SHA256 signature. 
+ * Validation class for authentication and validation of Github webhook requests
+ *
+ * <p>This class provides functions to verify that incoming webhook event are valid by checking the
+ * event type, repository name, and HMAC-SHA256 signature.
  */
 public class Validation {
 

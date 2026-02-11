@@ -9,13 +9,10 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 
 /**
- * GithubAPIHandler is class for sending commit status updates
- * to GitHub
- * 
- * <p> This class uses the GitHub REST API to post commit
- * statuses back to GitHub repositories. It authenticates,
- * request formats, and does the error handling for the 
- * commit status updates. 
+ * GithubAPIHandler is class for sending commit status updates to GitHub
+ *
+ * <p>This class uses the GitHub REST API to post commit statuses back to GitHub repositories. It
+ * authenticates, request formats, and does the error handling for the commit status updates.
  */
 public class GithubAPIHandler {
   private final JsonNode payload;

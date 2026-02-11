@@ -21,9 +21,8 @@ import org.springframework.stereotype.Service;
 public class CompilationService {
 
   /**
-   * Compiles a Java project using Gradle by executing the 
-   * {@code gradlew build} command
-   * 
+   * Compiles a Java project using Gradle by executing the {@code gradlew build} command
+   *
    * @param projectDir the directory containing the Gradle project to compile.
    * @return a {@link CompilationResult} containing the build status, output, and exit code.
    * @throws IOException if an I/O error occurs while reading the process output.
@@ -74,12 +73,10 @@ public class CompilationService {
   }
 
   /**
-   * CompilationResult is a class that represents the result 
-   * of a Gradle build compilation.
-   * 
-   * <p>The result contains whether the compilation was 
-   * successful, the complete build output, and the process
-   * exit code. 
+   * CompilationResult is a class that represents the result of a Gradle build compilation.
+   *
+   * <p>The result contains whether the compilation was successful, the complete build output, and
+   * the process exit code.
    */
   public static class CompilationResult {
 

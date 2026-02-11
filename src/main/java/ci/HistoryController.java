@@ -4,21 +4,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-/**
- * HistoryController is a Spring MVC controller for
- * handling commit history requests
- */
+/** HistoryController is a Spring MVC controller for handling commit history requests */
 @Controller
 public class HistoryController {
 
   private final Status status;
 
   /**
-   * Constructs a HistoryController with the specified
-   * Status service.
-   * 
-   * @param status the Status service used to retrieve the
-   * commit history
+   * Constructs a HistoryController with the specified Status service.
+   *
+   * @param status the Status service used to retrieve the commit history
    */
   public HistoryController(Status status) {
     this.status = status;

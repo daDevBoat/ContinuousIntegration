@@ -11,11 +11,10 @@ import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 /**
  * RepoSetup class for managing Git repostiory operations.
- * 
- * <p>This class contains static methods to initialize and
- * maintain Git repositories, which include creating 
- * directories, cloning repositories from GitHub, and 
- * updating repositories to specific commits. 
+ *
+ * <p>This class contains static methods to initialize and maintain Git repositories, which include
+ * creating directories, cloning repositories from GitHub, and updating repositories to specific
+ * commits.
  */
 public class RepoSetup {
 
