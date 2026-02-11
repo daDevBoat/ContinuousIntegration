@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+/**
+ * CiService is a Spring service for managing the continuous
+ * integration pipeline 
+ */
 @Service
 public class CiService {
 
@@ -42,6 +46,12 @@ public class CiService {
 
   private final Status status;
 
+  /**
+   * Constructs a CiService with the specified Status service
+   * 
+   * @param status the Status service used to store and
+   * retrieve build history
+   */
   public CiService(Status status) {
     this.status = status;
   }
@@ -49,6 +59,13 @@ public class CiService {
   /** Service responsible for compiling the project. */
   private CompilationService compilationService = new CompilationService();
 
+  /**
+   * Executes the CI build pipeline for a GitHub webhook push
+   * event 
+   * 
+   * @param payload the GitHub webhook payload containing
+   * repository and commit information
+   */
   @Async
   public void runBuild(JsonNode payload) {
 
