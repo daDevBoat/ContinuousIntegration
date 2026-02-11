@@ -91,6 +91,9 @@ The obstacles to reach the next state consists of two things. One is that we nee
 
 ## Statement of Contributions
 
+**We are particularly proud of our concurrent handling**
+In this project we have worked together and faced many difficult challenges, everything from endless merge conflicts (as the contributions were often overlapping in nature) to integration with the Github API. In this project we take pride over our work. Something that we are especially proud of and feel is remarkable is our implementation of concurrent handling of incoming requests. In this, the server can seamlessly build and test several different commits at the same time. This works by creating a separate testing directory for each incoming request, differentiating commits by their SHA identifier, and then building and testing the respective builds at the same time.
+
 ### [Elias Richard Næss] — GitHub: [@daDevBoat]
 Elias was responsible for the implementation of the usage of the Github commit REST API, implementing a testing structure that allowed for the server being able to concurrently handle requests, implementing validatePushEvent and validateRepoName functions, and made the CiService detach and run asynchronously such that the webhook gets a 202 message returned once payload is recieved and validated and the building and testing is handled by a seperate thread. 
 
