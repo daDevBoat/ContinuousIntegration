@@ -96,3 +96,12 @@ Elias was responsible for the implementation of the usage of the Github commit R
 
 ### [Alexander Mannertorn] - Github: [@knasssss]
 Alexander wrote the home() function and its corresponding unit test, wrote the draft of the integration test for CIWebHookController, wrote the original code for storing the status for the latest commit and its unittest, added missing javadocs, fixed incorrect javadocs, wrote the overview, the Team Essence part, and the API Documentation part in the readme file. 
+
+### [Jonatan Bölenius] — GitHub: [@djonte]
+Jonatan started by creating a small proof-of-concept Springboot application with the ability to respond to Github's webhooks, this was then used by the team as a supporting skeleton for the actual application. Other than that, his main contributions to the code base were:
+* Validation of the Webhook's secret (HMAC SHA256), which ensures no third party can send requests without knowing the shared secret. 
+* Persisting commits (storing CommitRecords)
+* Views for showing history of commits and checking out a specific commit by /commit/\<sha\>
+
+This together with appropriate unit tests for each feature, and the `How to run` part of the README as well as working together with Arnau to write the `Compilation and Test execution: Implementation and testing`.
+
