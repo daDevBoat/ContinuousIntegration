@@ -144,11 +144,12 @@ class CiWebhookIntegrationTest {
      * iff all checks within the runBuild function pass, updates the status 200 "success".
      */
 
-    // Create the repo so it passes checks
-    Files.createDirectories(temp.resolve(REPO_ID));
-
-    // sets value repoParentDir in ciService to temp
+    // Set value repoParentDir in ciService to temp
     ReflectionTestUtils.setField(ciService, "repoParentDir", temp.toString());
+
+    // Create the repo so it passes checks
+    String sha = "0123456789abcdef0123456789abcdef01234567";
+    Files.createDirectories(temp.resolve("test").resolve(sha).resolve(REPO_ID));
 
     // Fake compilation success - when the compile function is caled always return success as true
     CompilationService compilationMock = mock(CompilationService.class);
@@ -179,7 +180,6 @@ class CiWebhookIntegrationTest {
               })) {
 
         // Building the fake payload
-        String sha = "0123456789abcdef0123456789abcdef01234567";
         byte[] payloadBody = buildPayload(sha);
         String sig = "sha256=" + computeHMACWithSHA256(SECRET, payloadBody);
 
@@ -209,11 +209,12 @@ class CiWebhookIntegrationTest {
      * iff all the build fails, updates the status to "failure".
      */
 
-    // Create the repo so it passes checks
-    Files.createDirectories(temp.resolve(REPO_ID));
-
-    // sets value repoParentDir in ciService to temp
+    // Set value repoParentDir in ciService to temp
     ReflectionTestUtils.setField(ciService, "repoParentDir", temp.toString());
+
+    // Create the repo so it passes checks
+    String sha = "0123456789abcdef0123456789abcdef01234567";
+    Files.createDirectories(temp.resolve("test").resolve(sha).resolve(REPO_ID));
 
     // Fake compilation success - when the compile function is caled always return success as true
     CompilationService compilationMock = mock(CompilationService.class);
@@ -244,7 +245,6 @@ class CiWebhookIntegrationTest {
               })) {
 
         // Building the fake payload
-        String sha = "0123456789abcdef0123456789abcdef01234567";
         byte[] payloadBody = buildPayload(sha);
         String sig = "sha256=" + computeHMACWithSHA256(SECRET, payloadBody);
 
