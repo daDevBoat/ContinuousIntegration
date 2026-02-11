@@ -37,6 +37,12 @@ the page /history:
 - Build with `./gradlew build`
 - Test with `./gradlew test`
 
+### API Documentation (Javadoc)
+- Generate the browsable API documentation with `./gradlew javadoc` 
+- Open it with `python3 -m http.server 8000` and then 
+visiting http://localhost:8000/build/docs/javadoc/ 
+
+
 ## Compilation and Test execution: Implementation and testing
 ### Overview
 The compilation and testing feature is implemented in the CompilationService class.
