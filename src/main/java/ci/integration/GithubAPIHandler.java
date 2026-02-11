@@ -1,4 +1,4 @@
-package ci;
+package ci.integration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 public class GithubAPIHandler {
   private final JsonNode payload;
 
-  GithubAPIHandler(JsonNode payload) {
+  public GithubAPIHandler(JsonNode payload) {
     this.payload = payload;
   }
 

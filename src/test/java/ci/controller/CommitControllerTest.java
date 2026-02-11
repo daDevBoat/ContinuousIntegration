@@ -7,32 +7,38 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import ci.controller.CommitController;
+import ci.service.Status;
 import java.util.Arrays;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(HistoryController.class)
-public class HistoryControllerTest {
+@WebMvcTest(CommitController.class)
+public class CommitControllerTest {
 
   @Autowired private MockMvc mockMvc;
   @MockitoBean Status status;
 
   @Test
-  public void historyPageTest() throws Exception {
+  public void commitPageTest() throws Exception {
     /*
-     * Contract: When getCommits() returns a List of commit records the history view should be
-     * returned with status OK and contain that list in its model's attributes.
+     * Contract: When getLatest() returns a CommitRecord the model's attributes
+     * should contain a reference to that commit, and the getter should return the commit view
+     * with status OK.
      */
-    when(status.getCommits())
+    when(status.getLatest())
         .thenReturn(
-            Arrays.asList(new Status.CommitRecord("dummy", "pass", Arrays.asList("message"))));
+            Optional.of(new Status.CommitRecord("dummy", "pass", Arrays.asList("message"))));
+
     mockMvc
-        .perform(get("/history"))
+        .perform(get("/commit"))
         .andExpect(status().isOk())
-        .andExpect(view().name("history"))
-        .andExpect(model().attribute("historyList", notNullValue()));
+        .andExpect(view().name("commit"))
+        .andExpect(model().attributeExists("latestCommit"))
+        .andExpect(model().attribute("latestCommit", notNullValue()));
   }
 }
