@@ -9,6 +9,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
+/**
+ * RepoSetup class for managing Git repostiory operations.
+ *
+ * <p>This class contains static methods to initialize and maintain Git repositories, which include
+ * creating directories, cloning repositories from GitHub, and updating repositories to specific
+ * commits.
+ */
 public class RepoSetup {
 
   /**
@@ -16,8 +23,8 @@ public class RepoSetup {
    * application.propoerties file
    *
    * @param repoParentDir Path to the parent directory, where we want to store the test repo
-   * @throws Exception when the directory cant be created
-   * @throws Exception when the file located under the location is not a directory
+   * @throws IOException when the directory cant be created
+   * @throws IOException when the file located under the location is not a directory
    */
   public static void createDir(String repoParentDir) throws IOException {
     File dir = new File(repoParentDir);
@@ -58,7 +65,7 @@ public class RepoSetup {
    * @param repoParentDir Path to the parent directory, where we want to store the test repo
    * @param repoID The ID of the test repo - what it should be named like
    * @param repoSsh The SSH to the repo, so it can be cloned from GitHub
-   * @throws Exception If the GitHub repo could not be cloned
+   * @throws IllegalStateException If the GitHub repo could not be cloned
    */
   public static void cloneRepo(String repoParentDir, String repoID, String repoSsh) {
 
@@ -106,8 +113,8 @@ public class RepoSetup {
    * @param repoParentDir Path to the parent directory, where we want to store the test repo
    * @param repoID The ID of the test repo - what it should be named like
    * @param sha The commit sha from the http payload
-   * @throws Exception when the sha is null, blank or only 0's
-   * @throws Exception When one of the git commands could not be executed
+   * @throws IllegalArgumentException when the sha is null, blank or only 0's
+   * @throws IllegalStateException When one of the git commands could not be executed
    */
   public static void updateRepo(String repoParentDir, String repoID, String sha) {
     if (sha == null || sha.isBlank() || sha.equals("0000000000000000000000000000000000000000")) {

@@ -54,6 +54,11 @@ public class CiWebhookController {
 
   private final CiService ciService;
 
+  /**
+   * Contructs a CiWebhookController with the specified CiService
+   *
+   * @param ciService the CiService used to handle CI operations triggered by webhook events
+   */
   public CiWebhookController(CiService ciService) {
     this.ciService = ciService;
   }

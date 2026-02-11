@@ -8,6 +8,12 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.tomcat.util.buf.HexUtils;
 
+/**
+ * Validation class for authentication and validation of Github webhook requests
+ *
+ * <p>This class provides functions to verify that incoming webhook event are valid by checking the
+ * event type, repository name, and HMAC-SHA256 signature.
+ */
 public class Validation {
 
   /**
@@ -23,7 +29,8 @@ public class Validation {
   /**
    * Used to validate that the payload is from the correct repo
    *
-   * @param payload
+   * @param payload the JSON payload of the GitHub webhook
+   * @param expectedRepoName the expected repository name
    * @return The result of the repo check validation
    */
   public static boolean validateRepoName(JsonNode payload, String expectedRepoName) {

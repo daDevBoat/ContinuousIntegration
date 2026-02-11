@@ -31,11 +31,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class Status {
 
-  /** Record that represents a single commit and its associated information. */
+  /**
+   * Record that represents a single commit and its associated information.
+   *
+   * @param sha the commit SHA hash
+   * @param state the compilation state of the commit
+   * @param time the timestamp of the commit
+   * @param logs the build logs of the commit
+   */
   public record CommitRecord(String sha, String state, String time, List<String> logs) {
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    /**
+     * Constructor that creates a CommitRecord with the current timestamp.
+     *
+     * @param sha the commit SHA hash
+     * @param state the compilation state of the commit
+     * @param logs the build logs of the commit
+     */
     public CommitRecord(String sha, String state, List<String> logs) {
       this(sha, state, LocalDateTime.now().format(FMT), logs);
     }
@@ -54,6 +68,11 @@ public class Status {
     this(Paths.get("build", "commits.json"));
   }
 
+  /**
+   * Constructs a Status instance with a custom path for the commits file
+   *
+   * @param commitsFilePath the file path where the commit history will be stored and loaded from
+   */
   public Status(Path commitsFilePath) {
     this.commitsFilePath = commitsFilePath;
     this.mapper = new ObjectMapper();
@@ -86,7 +105,11 @@ public class Status {
     return Optional.ofNullable(latest.get());
   }
 
-  /** Returns the map of commits. Used for lookup by SHA. */
+  /**
+   * Returns the map of commits. Used for lookup by SHA.
+   *
+   * @return a ConcurrentHashMap with commit SHA as key and CommitRecord as value
+   */
   public ConcurrentHashMap<String, CommitRecord> getCommitsMap() {
     return this.commits;
   }
