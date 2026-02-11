@@ -88,3 +88,8 @@ When evaluating the checklist for Team in the Essence standard, it is clear that
 It is clear that we are in the state Collaborating since we fulfill all the points for the previous states as well as all the points for the Collaborating state. We are working as one cohesive unit by splitting up the work and working together on the parts that need collaboration. Our communication is open and honest, all team members know and trust each other, and are focused on achieving the team mission.
 
 The obstacles to reach the next state consists of two things. One is that we need to minimize the avoidable backtracking and reworking. Right now we still have to backtrack and rework our solutions at times, because our original outline of the program might have been wrong, or because different team members' implementations do not align with each other. The second obstacle for reaching the next state is to continously identify and eliminate wasted work and potential wasted work. Right now we still get some wasted work at times, for example when one member's code has to be modified to fit another member's code. 
+
+## Statement of Contributions
+
+### [Elias Richard Næss] — GitHub: [@daDevBoat]
+Elias was responsible for the implementation of the usage of the Github commit REST API, implementing a testing structure that allowed for the server being able to concurrently handle requests, implementing validatePushEvent and validateRepoName functions, and made the CiService detach and run asynchronously such that the webhook gets a 202 message returned once payload is recieved and validated and the building and testing is handled by a seperate thread. 
