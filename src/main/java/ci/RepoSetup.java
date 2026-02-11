@@ -41,7 +41,6 @@ public class RepoSetup {
    *
    * @param repoParentDir Path to the parent directory, where we want to store the test repo
    * @throws IOException in case deletion is unsuccessful or dir does not exist
-   * @throws IllegalArgumentException if the file located under the location is not a directory
    */
   public static void removeDir(String repoParentDir) throws IOException {
     File dir = new File(repoParentDir);
@@ -50,7 +49,7 @@ public class RepoSetup {
       throw new IOException("Directoty does not exist at: " + repoParentDir);
     }
 
-    FileUtils.deleteDirectory(dir);
+    FileUtils.forceDelete(dir);
   }
 
   /**

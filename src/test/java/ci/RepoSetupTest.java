@@ -39,7 +39,7 @@ class RepoSetupTest {
   @Test
   void removeDirSuccess(@TempDir Path temp) throws Exception {
     /* Contract: removeDir removes a directory if a directory already exists under the given path */
-    Path newFilePath = temp.resolve("newDirectory");
+    Path newFilePath = temp.resolve("newDirectoryTest");
     Files.createDirectory(newFilePath);
     assertDoesNotThrow(() -> RepoSetup.removeDir(newFilePath.toString()));
   }
@@ -49,7 +49,7 @@ class RepoSetupTest {
     /* Contract: removeDir removes a directory if a directory already exists under
      * the given path, in this caseno file exists
      */
-    Path newFilePath = temp.resolve("newDirectory");
+    Path newFilePath = temp.resolve("newDirectoryTest");
     assertThrows(IOException.class, () -> RepoSetup.removeDir(newFilePath.toString()));
   }
 
