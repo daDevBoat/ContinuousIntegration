@@ -93,3 +93,6 @@ The obstacles to reach the next state consists of two things. One is that we nee
 
 ### [Elias Richard Næss] — GitHub: [@daDevBoat]
 Elias was responsible for the implementation of the usage of the Github commit REST API, implementing a testing structure that allowed for the server being able to concurrently handle requests, implementing validatePushEvent and validateRepoName functions, and made the CiService detach and run asynchronously such that the webhook gets a 202 message returned once payload is recieved and validated and the building and testing is handled by a seperate thread. 
+
+### [Alexander Mannertorn] - Github: [@knasssss]
+Alexander wrote the home() function and its corresponding unit test, wrote the draft of the integration test for CIWebHookController, wrote the original code for storing the status for the latest commit and its unittest, added missing javadocs, fixed incorrect javadocs, wrote the overview, the Team Essence part, and the API Documentation part in the readme file. 
