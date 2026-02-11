@@ -125,11 +125,7 @@ public class CiService {
 
         // Save the failed build
         status.put(new CommitRecord(sha, "FAILURE", compilationResult.getOutput()));
-        System.out.println(
-            "[CI] Output:\n"
-                + compilationResult
-                    .getOutput()); // Keep line to see what tests failed? -> Delete this
-        // line.
+        System.out.println("[CI] Output:\n" + compilationResult.getOutput());
 
         apiHandler.sendPost(
             authToken,
