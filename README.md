@@ -105,3 +105,6 @@ Jonatan started by creating a small proof-of-concept Springboot application with
 
 This together with appropriate unit tests for each feature, and the `How to run` part of the README as well as working together with Arnau to write the `Compilation and Test execution: Implementation and testing`.
 
+### [Jannis Häffner] — GitHub: [@dJannisHaeffner]
+Jannis was responsible for the implementation of the RepoSetup class which is needed to create and clone the repo, fetch the newest changes and checkout a specific commit. He implemented, in addition to the corresponding tests for the RepoSetup class, also an integration test for the CIWebhook Controller and the CI Service class. This integration test verifies that in different sitations the expected HTTP status codes are returned. 
+
