@@ -28,13 +28,13 @@ public class ValidationTest {
      * Contract: validatePushEvent returns true iff the event is "push"
      */
     String event = "push";
-    assertTrue(ci.Validation.validatePushEvent(event));
+    assertTrue(ci.util.Validation.validatePushEvent(event));
 
     event = "puSH";
-    assertFalse(ci.Validation.validatePushEvent(event));
+    assertFalse(ci.util.Validation.validatePushEvent(event));
 
     event = "pull";
-    assertFalse(ci.Validation.validatePushEvent(event));
+    assertFalse(ci.util.Validation.validatePushEvent(event));
   }
 
   @Test
@@ -91,11 +91,11 @@ public class ValidationTest {
       System.out.println(e);
     }
 
-    assertTrue(ci.Validation.validateRepoName(payload, repoName));
+    assertTrue(ci.util.Validation.validateRepoName(payload, repoName));
 
     ObjectNode repository = (ObjectNode) payload.get("repository");
     repository.put("full_name", "daDevBoat/test");
-    assertFalse(ci.Validation.validateRepoName(payload, repoName));
+    assertFalse(ci.util.Validation.validateRepoName(payload, repoName));
   }
 
   @Test
@@ -112,7 +112,7 @@ public class ValidationTest {
     assertDoesNotThrow(
         () -> {
           boolean validSignature =
-              ci.Validation.validateSignature(sharedKey, body.getBytes("UTF-8"), signature);
+              ci.util.Validation.validateSignature(sharedKey, body.getBytes("UTF-8"), signature);
           assertTrue(validSignature);
         });
   }
@@ -133,7 +133,7 @@ public class ValidationTest {
     assertDoesNotThrow(
         () -> {
           boolean validSignature =
-              ci.Validation.validateSignature(sharedKey, body.getBytes("UTF-8"), signature);
+              ci.util.Validation.validateSignature(sharedKey, body.getBytes("UTF-8"), signature);
           assertFalse(validSignature);
         });
   }
@@ -150,6 +150,6 @@ public class ValidationTest {
 
     assertThrows(
         IllegalArgumentException.class,
-        () -> ci.Validation.validateSignature(sharedKey, body, signature));
+        () -> ci.util.Validation.validateSignature(sharedKey, body, signature));
   }
 }

@@ -1,4 +1,4 @@
-package ci;
+package ci.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

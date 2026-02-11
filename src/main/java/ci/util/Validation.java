@@ -1,4 +1,4 @@
-package ci;
+package ci.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.UnsupportedEncodingException;

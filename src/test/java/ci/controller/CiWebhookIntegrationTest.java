@@ -12,6 +12,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import ci.integration.GithubAPIHandler;
+import ci.service.CiService;
+import ci.service.CompilationService;
+import ci.util.RepoSetup;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;

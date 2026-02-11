@@ -1,6 +1,8 @@
-package ci;
+package ci.service;
 
-import ci.Status.CommitRecord;
+import ci.integration.GithubAPIHandler;
+import ci.service.Status.CommitRecord;
+import ci.util.RepoSetup;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.File;
 import java.io.IOException;

@@ -1,5 +1,6 @@
-package ci;
+package ci.controller;
 
+import ci.service.CiService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -102,7 +103,7 @@ public class CiWebhookController {
     }
 
     /* Checking for correct event type */
-    if (!ci.Validation.validatePushEvent(event)) {
+    if (!ci.util.Validation.validatePushEvent(event)) {
       return ResponseEntity.badRequest()
           .body("The github event is not push, but is required to be so.");
     }
@@ -110,7 +111,7 @@ public class CiWebhookController {
     /* Verify signature */
     boolean signatureValid;
     try {
-      signatureValid = ci.Validation.validateSignature(sharedKey, body, signature);
+      signatureValid = ci.util.Validation.validateSignature(sharedKey, body, signature);
     } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     } catch (Exception e) {
@@ -122,7 +123,7 @@ public class CiWebhookController {
     }
 
     /* Checking for correct repository */
-    if (!ci.Validation.validateRepoName(payload, repoName)) {
+    if (!ci.util.Validation.validateRepoName(payload, repoName)) {
       return ResponseEntity.badRequest()
           .body("The repo name is not: " + repoName + ", while it is required to be so");
     }
