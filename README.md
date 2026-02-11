@@ -64,6 +64,14 @@ The compilation and testing feature is tested in the `CompilationTest` class, wh
 
 The compilation logic is a part of the webhook integration test where it is mocked and used to see that the webhook returns the correct status. This tests the that the interaction between the compilation and the result that the webhook sends to Github is functioning correctly.
 
+
+## CI server notification: Testing and Implementation
+### Implementation
+CI server notification is implemented using the GitHub REST API for commit status. Where the statuses is displayed in the commit message at GitHub as either **success**, **pending** or **failure**. GithubAPIHandler.java is the class that is used to construct the POST request that is sent to the Github API. 
+
+### Testing
+The notifications are unit tested using where a **success**, **pending**, **failure** and invalid commit status post request is sent to different commits on the test/commit_status_api branch. The unit tests checks whether the post request was sent successfully or if an excpetion was thrown.
+
 ## Way-of-working:
 We agreed to follow a continuous integration workstyle, where for every feature or fix identified, we create an issue. Every issue is its own branch. After the work on an issue is completed, the issue branch will be rebased, the commits will be squashed, and then merged with main. This allows the main branch to have an easily understood commit history, with each commit representing one issue, while also allowing for tracing errors or bugs to a specific commit.
 
