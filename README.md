@@ -108,6 +108,6 @@ This together with appropriate unit tests for each feature, and the `How to run`
 ### [Jannis Häffner] — GitHub: [@dJannisHaeffner]
 Jannis was responsible for the implementation of the RepoSetup class which is needed to create and clone the repo, fetch the newest changes and checkout a specific commit. He implemented, in addition to the corresponding tests for the RepoSetup class, also an integration test for the CIWebhook Controller and the CI Service class. This integration test verifies that in different sitations the expected HTTP status codes are returned. 
 
-### [Arnau Pelechano García] - GitHub: [@arpega75]
+### [Arnau Pelechano García] - GitHub: [@arpega75]
 Arnau was responsible for implementing the **compilation** feature and integrating it into the CI pipeline. He developed the CompilationService class, which executes `./gradlew build`, captures the exit code and logs, and returns the result indicating whether the build succeeded or failed. He integrated this functionality into the CiService, ensuring that build results are stored in the Status service for commit persistence, in collaboration with Jonatan. 
 He also implemented the CompilationTest with unit tests, wrote the Javadoc for the CompilationService and the `Compilation and Test execution: Implementation and Testing` section of the README together with Jonatan.
