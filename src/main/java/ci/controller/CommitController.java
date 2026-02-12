@@ -30,7 +30,7 @@ public class CommitController {
    * @return view name
    */
   @GetMapping({"/commit", "/commit/{sha}"})
-  public String commit(@PathVariable(value = "sha", required = false) String sha, Model model) {
+  public String commitPathVariable(value = "sha", required = false) String sha, Model model) {
     if (sha == null) {
       model.addAttribute("latestCommit", status.getLatest().orElse(null));
     } else {
