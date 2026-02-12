@@ -15,7 +15,7 @@ the page /history:
 | Jannis Häffner | https://corban-hyperscrupulous-jesse.ngrok-free.dev/history |
 | Jonatan Bölenius | https://phagolytic-bertram-weighty.ngrok-free.dev/history |
 
-
+s
 ## How to run
 
 ### Prerequisites
